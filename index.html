@@ -300,11 +300,14 @@
     }
     .trust-box h3 { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1.25rem; }
     .trust-row {
-      display: flex; align-items: center; justify-content: space-between;
+      display: grid; grid-template-columns: 1fr auto auto; gap: 0.5rem;
+      align-items: center;
       padding: 0.75rem 0; border-bottom: 1px solid var(--gray-100);
     }
     .trust-row:last-child { border-bottom: none; }
     .trust-label { font-size: 0.85rem; color: var(--gray-700); font-weight: 500; }
+    .trust-row > div > .trust-tag:first-child { justify-self: end; text-align: right; }
+    .trust-row > div > .trust-tag:last-child { justify-self: start; text-align: left; }
     .trust-tag {
       font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem;
       border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em;
@@ -688,42 +691,42 @@
 
           <div class="trust-row">
             <span class="trust-label">Skill proficiency level</span>
-            <div style="display:flex;gap:0.5rem">
+            <div style="display:contents">
               <span class="trust-tag tag-none">Self-reported</span>
               <span class="trust-tag tag-verified">Evidence-backed</span>
             </div>
           </div>
           <div class="trust-row">
             <span class="trust-label">Work experience</span>
-            <div style="display:flex;gap:0.5rem">
+            <div style="display:contents">
               <span class="trust-tag tag-pending">Unverified claims</span>
               <span class="trust-tag tag-verified">Employer-verified</span>
             </div>
           </div>
           <div class="trust-row">
             <span class="trust-label">Certifications</span>
-            <div style="display:flex;gap:0.5rem">
+            <div style="display:contents">
               <span class="trust-tag tag-pending">Listed only</span>
               <span class="trust-tag tag-verified">Cryptographically linked</span>
             </div>
           </div>
           <div class="trust-row">
             <span class="trust-label">Project contributions</span>
-            <div style="display:flex;gap:0.5rem">
+            <div style="display:contents">
               <span class="trust-tag tag-none">Described in prose</span>
               <span class="trust-tag tag-verified">Analysed from source</span>
             </div>
           </div>
           <div class="trust-row">
             <span class="trust-label">Peer testimonials</span>
-            <div style="display:flex;gap:0.5rem">
+            <div style="display:contents">
               <span class="trust-tag tag-none">References on request</span>
               <span class="trust-tag tag-verified">Attached to evidence</span>
             </div>
           </div>
           <div class="trust-row">
             <span class="trust-label">Updates automatically</span>
-            <div style="display:flex;gap:0.5rem">
+            <div style="display:contents">
               <span class="trust-tag tag-none">Never</span>
               <span class="trust-tag tag-verified">Continuously</span>
             </div>
@@ -1089,7 +1092,6 @@
   </div>
 
   <div class="footer-bottom">
-    &copy; 2026 Skallery Inc. All rights reserved.
   </div>
 </footer>
 
