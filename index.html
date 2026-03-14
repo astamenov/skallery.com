@@ -1,54 +1,1129 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Skallery | Verifiable Proof of Skills</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-      
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #ffffff;
-        color: #111827;
-      }
-      
-      /* Subtle Grid Background - Light Mode */
-      .bg-grid-pattern {
-        background-size: 40px 40px;
-        background-image: linear-gradient(to right, #f3f4f6 1px, transparent 1px),
-                          linear-gradient(to bottom, #f3f4f6 1px, transparent 1px);
-        mask-image: radial-gradient(circle at center, black, transparent 80%);
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skallery — Verifiable Proof of Professional Ability</title>
+  <meta name="description" content="Skallery replaces the resume with a dynamic, evidence-backed profile where every skill is linked to verifiable proof — projects, certifications, and testimonials." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      .glass-panel {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
-    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
-    "@heroicons/react/24/outline": "https://aistudiocdn.com/@heroicons/react@^2.2.0/24/outline",
-    "@heroicons/react/24/solid": "https://aistudiocdn.com/@heroicons/react@^2.2.0/24/solid",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "@heroicons/react/": "https://aistudiocdn.com/@heroicons/react@^2.2.0/"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+    :root {
+      --lime: #a3e635;
+      --lime-dark: #84cc16;
+      --lime-light: #ecfccb;
+      --emerald: #10b981;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--gray-900);
+      background: #fff;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: #bef264; color: #000; }
+
+    /* ── Layout ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .container-narrow { max-width: 780px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 64px;
+      border-bottom: 1px solid var(--gray-200);
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;
+      height: 100%; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none; color: var(--gray-900);
+    }
+    .logo-mark {
+      width: 24px; height: 24px;
+      background: var(--lime); border-radius: 3px;
+      transform: rotate(45deg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-mark-dot {
+      width: 10px; height: 10px;
+      background: #fff; border-radius: 50%;
+      transform: rotate(-45deg);
+    }
+    .nav-logo span { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 0.25rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none; color: var(--gray-600); font-size: 0.875rem; font-weight: 500;
+      padding: 0.4rem 0.75rem; border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-links a:hover { color: var(--gray-900); background: var(--gray-100); }
+
+    .nav-pill {
+      display: flex; align-items: center; gap: 0.375rem;
+      background: var(--lime-light); border: 1px solid #d9f99d;
+      color: #3f6212; font-size: 0.75rem; font-weight: 700;
+      padding: 0.35rem 0.75rem; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .nav-pill-dot { width: 6px; height: 6px; background: var(--lime-dark); border-radius: 50%; animation: pulse 2s infinite; }
+
+    /* Mobile menu button */
+    .mobile-menu-btn {
+      display: none; background: none; border: none; cursor: pointer;
+      padding: 0.25rem; color: var(--gray-600);
+    }
+    .mobile-menu-btn svg { width: 24px; height: 24px; }
+
+    .mobile-menu {
+      display: none;
+      position: absolute; top: 64px; left: 0; right: 0;
+      background: #fff; border-bottom: 1px solid var(--gray-200);
+      padding: 1rem 1.5rem 1.5rem; flex-direction: column; gap: 0.25rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      text-decoration: none; color: var(--gray-700); font-weight: 500;
+      padding: 0.625rem 0; font-size: 0.95rem;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 8rem 1.5rem 6rem;
+      background: #fff;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(var(--gray-200) 1px, transparent 1px),
+        linear-gradient(90deg, var(--gray-200) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.45;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+    }
+    .hero-glow {
+      position: absolute; top: 25%; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 350px;
+      background: rgba(163,230,53,0.25); border-radius: 50%;
+      filter: blur(100px); pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: #fff; border: 1px solid var(--gray-200);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      border-radius: 999px; padding: 0.3rem 0.875rem;
+      margin-bottom: 1.75rem;
+    }
+    .hero-badge-dot { width: 8px; height: 8px; background: var(--lime-dark); border-radius: 50%; animation: pulse 2s infinite; }
+    .hero-badge span { font-size: 0.7rem; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .hero-dict {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; color: var(--gray-400);
+      margin-bottom: 1.25rem; display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;
+    }
+    .hero-dict-word { font-weight: 700; color: var(--gray-700); }
+    .hero-dict-pron { color: var(--gray-400); }
+    .hero-dict-sep { color: var(--gray-300); }
+    .hero-dict-def { font-style: italic; color: var(--gray-500); }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900; line-height: 1.08; letter-spacing: -0.03em;
+      color: var(--gray-900); margin-bottom: 1.25rem;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--lime-dark) 0%, var(--emerald) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero-sub {
+      font-size: 1.125rem; color: var(--gray-600); line-height: 1.7;
+      max-width: 520px; margin-bottom: 2rem;
+    }
+    .coming-soon-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--gray-900); color: #fff; font-size: 0.75rem; font-weight: 700;
+      padding: 0.5rem 1rem; border-radius: 6px; letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .coming-soon-tag svg { width: 14px; height: 14px; }
+
+    /* Profile card mockup */
+    .card-wrap { position: relative; display: flex; justify-content: center; }
+    .card-deco {
+      position: absolute; top: -1.5rem; right: -1.5rem;
+      width: 100%; height: 100%;
+      border: 2px dashed var(--gray-200); border-radius: 1.25rem;
+      pointer-events: none;
+    }
+    .profile-card {
+      background: #fff; border-radius: 1.25rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+      border: 1px solid var(--gray-100); overflow: hidden;
+      width: 100%; max-width: 420px;
+      transition: transform 0.4s ease;
+    }
+    .profile-card:hover { transform: scale(1.015) rotate(-0.5deg); }
+    .card-banner {
+      height: 120px;
+      background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%);
+      position: relative;
+    }
+    .card-verified-badge {
+      position: absolute; top: 1rem; right: 1rem;
+      background: rgba(0,0,0,0.35); backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px; padding: 0.25rem 0.625rem;
+      display: flex; align-items: center; gap: 0.35rem;
+      color: #fff; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em;
+    }
+    .card-verified-badge svg { width: 12px; height: 12px; color: var(--lime); }
+    .card-body { padding: 0 1.5rem 2rem; }
+    .card-avatar-row {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-top: -3rem; margin-bottom: 1rem;
+    }
+    .card-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 4px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      background: linear-gradient(135deg, #c4b5fd 0%, #818cf8 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem; font-weight: 700; color: #fff;
+      position: relative;
+    }
+    .card-avatar-check {
+      position: absolute; bottom: 0; right: 0;
+      width: 24px; height: 24px; background: var(--lime);
+      border-radius: 50%; border: 3px solid #fff;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-avatar-check svg { width: 12px; height: 12px; color: #1a2e05; }
+    .card-name { font-size: 1.25rem; font-weight: 700; color: var(--gray-900); }
+    .card-role { font-size: 0.875rem; color: var(--gray-500); font-weight: 500; margin-bottom: 1.25rem; }
+    .skill-row {
+      background: var(--gray-50); border: 1px solid var(--gray-100);
+      border-radius: 0.625rem; padding: 0.75rem; margin-bottom: 0.625rem;
+    }
+    .skill-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .skill-name { font-size: 0.8rem; font-weight: 700; color: var(--gray-700); }
+    .skill-verified { display: flex; align-items: center; gap: 0.25rem; color: var(--lime-dark); font-size: 0.65rem; font-weight: 700; }
+    .skill-verified svg { width: 11px; height: 11px; }
+    .skill-bar { height: 5px; background: var(--gray-200); border-radius: 999px; overflow: hidden; }
+    .skill-bar-fill { height: 100%; background: linear-gradient(90deg, var(--lime-dark), var(--emerald)); border-radius: 999px; }
+    .card-footer { border-top: 1px solid var(--gray-100); padding-top: 1rem; margin-top: 1rem; text-align: center; }
+    .card-footer span { font-size: 0.7rem; color: var(--gray-400); font-weight: 500; }
+
+    .float-badge {
+      position: absolute; bottom: -1rem; left: -1.5rem;
+      background: #fff; border: 1px solid var(--gray-100);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      border-radius: 0.875rem; padding: 0.75rem 1rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      animation: float 4s ease-in-out infinite;
+    }
+    .float-badge-icon {
+      width: 36px; height: 36px; background: var(--lime-light);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    }
+    .float-badge-icon svg { width: 18px; height: 18px; color: var(--lime-dark); }
+    .float-badge-label { font-size: 0.7rem; color: var(--gray-500); font-weight: 500; }
+    .float-badge-value { font-size: 0.85rem; color: var(--gray-900); font-weight: 700; }
+
+    /* ── Sections ── */
+    .section { padding: 6rem 1.5rem; }
+    .section-alt { background: var(--gray-50); }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem; font-weight: 700;
+      color: var(--lime-dark); text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 800;
+      letter-spacing: -0.02em; color: var(--gray-900); line-height: 1.2;
+    }
+    .section-sub { font-size: 1.1rem; color: var(--gray-500); line-height: 1.7; max-width: 580px; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* ── Problem Section ── */
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 3rem; }
+    .problem-point { display: flex; gap: 1rem; margin-bottom: 1.75rem; }
+    .problem-num {
+      flex-shrink: 0; width: 32px; height: 32px; background: var(--gray-900);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: #fff;
+    }
+    .problem-point h4 { font-size: 0.95rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.25rem; }
+    .problem-point p { font-size: 0.875rem; color: var(--gray-600); line-height: 1.6; }
+
+    .trust-box {
+      background: #fff; border: 1px solid var(--gray-200);
+      border-radius: 1.25rem; padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .trust-box h3 { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1.25rem; }
+    .trust-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 0; border-bottom: 1px solid var(--gray-100);
+    }
+    .trust-row:last-child { border-bottom: none; }
+    .trust-label { font-size: 0.85rem; color: var(--gray-700); font-weight: 500; }
+    .trust-tag {
+      font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.5rem;
+      border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .tag-verified { background: #dcfce7; color: #166534; }
+    .tag-pending { background: #fef9c3; color: #713f12; }
+    .tag-none { background: var(--gray-100); color: var(--gray-500); }
+
+    /* ── Features ── */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3.5rem; }
+    .feature-card {
+      background: #fff; border: 1px solid var(--gray-200); border-radius: 1.25rem;
+      padding: 2rem; transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    }
+    .feature-card:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.08); transform: translateY(-3px); }
+    .feature-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .feature-icon svg { width: 26px; height: 26px; }
+    .icon-lime { background: var(--lime-light); color: var(--lime-dark); }
+    .icon-emerald { background: #d1fae5; color: #065f46; }
+    .icon-amber { background: #fef3c7; color: #92400e; }
+    .feature-card h4 { font-size: 1.05rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.625rem; }
+    .feature-card p { font-size: 0.875rem; color: var(--gray-600); line-height: 1.65; }
+
+    /* ── How it works ── */
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 3.5rem; position: relative; }
+    .steps-grid::before {
+      content: ''; position: absolute;
+      top: 1.5rem; left: calc(12.5% + 0.75rem); right: calc(12.5% + 0.75rem);
+      height: 2px; background: linear-gradient(90deg, var(--lime-light), var(--lime), var(--lime-light));
+      pointer-events: none;
+    }
+    .step { text-align: center; padding: 0 0.5rem; }
+    .step-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #fff; border: 2px solid var(--lime);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 0.875rem; font-weight: 800; color: var(--lime-dark);
+      position: relative; z-index: 1;
+      box-shadow: 0 0 0 6px #fff;
+    }
+    .step h4 { font-size: 0.9rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.5rem; }
+    .step p { font-size: 0.8rem; color: var(--gray-600); line-height: 1.6; }
+
+    /* ── Who it's for ── */
+    .audience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem; }
+    .audience-card {
+      border-radius: 1.25rem; padding: 2.25rem;
+      border: 1px solid transparent;
+    }
+    .audience-pro { background: var(--gray-900); color: #fff; }
+    .audience-emp { background: var(--lime-light); border-color: #d9f99d; }
+    .audience-card h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .audience-card .sub { font-size: 0.875rem; margin-bottom: 1.5rem; opacity: 0.7; }
+    .audience-emp .sub { color: #3f6212; }
+    .audience-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .audience-list li {
+      display: flex; align-items: flex-start; gap: 0.625rem;
+      font-size: 0.875rem; line-height: 1.5;
+    }
+    .audience-pro .audience-list li { color: #d1d5db; }
+    .audience-emp .audience-list li { color: #3f6212; }
+    .check-icon { flex-shrink: 0; margin-top: 2px; }
+    .check-icon svg { width: 16px; height: 16px; }
+    .audience-pro .check-icon svg { color: var(--lime); }
+    .audience-emp .check-icon svg { color: var(--emerald); }
+
+    /* ── Testimonials ── */
+    .testimonials-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+    .testimonial {
+      background: #fff; border: 1px solid var(--gray-100);
+      border-radius: 1.25rem; padding: 2.25rem; position: relative;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      transition: box-shadow 0.2s;
+    }
+    .testimonial:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+    .testimonial-bar {
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--lime), var(--emerald));
+      border-radius: 1.25rem 1.25rem 0 0;
+    }
+    .stars { display: flex; gap: 3px; margin-bottom: 1.25rem; }
+    .stars svg { width: 18px; height: 18px; color: var(--lime-dark); fill: var(--lime-dark); }
+    blockquote {
+      font-size: 1rem; color: var(--gray-800); font-style: italic;
+      line-height: 1.7; margin-bottom: 1.75rem;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 0.875rem; }
+    .avatar-circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1rem; color: #fff; flex-shrink: 0;
+    }
+    .author-name { font-weight: 700; font-size: 0.9rem; color: var(--gray-900); }
+    .author-role { font-size: 0.8rem; color: var(--gray-500); font-weight: 500; }
+
+    /* ── FAQ ── */
+    .faq-list { margin-top: 2.5rem; }
+    .faq-item { border-bottom: 1px solid var(--gray-200); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-question {
+      width: 100%; padding: 1.5rem 0;
+      display: flex; align-items: center; justify-content: space-between;
+      background: none; border: none; cursor: pointer; text-align: left;
+      gap: 1rem;
+    }
+    .faq-question span {
+      font-size: 1rem; font-weight: 600; color: var(--gray-800);
+      transition: color 0.15s;
+    }
+    .faq-question:hover span { color: var(--lime-dark); }
+    .faq-question.open span { color: var(--lime-dark); }
+    .faq-icon {
+      flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+      background: var(--gray-100); display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.3s;
+    }
+    .faq-icon svg { width: 14px; height: 14px; color: var(--gray-600); }
+    .faq-question.open .faq-icon { background: var(--lime); transform: rotate(180deg); }
+    .faq-question.open .faq-icon svg { color: #1a2e05; }
+    .faq-answer {
+      overflow: hidden; max-height: 0;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .faq-answer.open { max-height: 300px; }
+    .faq-answer p {
+      padding-bottom: 1.5rem; font-size: 0.9375rem;
+      color: var(--gray-600); line-height: 1.75;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--gray-900); border-top: 1px solid #1f2937;
+      padding: 4rem 1.5rem 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem;
+    }
+    .footer-brand p { font-size: 0.875rem; color: #6b7280; line-height: 1.7; margin-top: 1rem; max-width: 340px; }
+    .footer-logo { display: flex; align-items: center; gap: 0.5rem; }
+    .footer-logo span { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .footer-logo-mark { width: 20px; height: 20px; background: var(--lime); border-radius: 3px; transform: rotate(45deg); }
+    footer h4 { font-size: 0.75rem; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+    footer ul { list-style: none; display: flex; flex-direction: column; gap: 0.625rem; }
+    footer ul li a { font-size: 0.875rem; color: #6b7280; text-decoration: none; transition: color 0.15s; }
+    footer ul li a:hover { color: var(--lime); }
+    .footer-bottom {
+      max-width: 1200px; margin: 3rem auto 0;
+      padding-top: 2rem; border-top: 1px solid #1f2937;
+      text-align: center; font-size: 0.75rem; color: #4b5563;
+    }
+
+    /* ── Animations ── */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .steps-grid::before { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .card-wrap { display: none; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .audience-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .nav-links, .nav-pill { display: none; }
+      .mobile-menu-btn { display: block; }
+      h1 { font-size: 2.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .steps-grid { grid-template-columns: 1fr; }
+      .section { padding: 4rem 1.25rem; }
+      .hero { padding: 6rem 1.25rem 4rem; }
+    }
+  </style>
 </head>
-  <body>
-    <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
+<body>
+
+<!-- ── Navbar ── -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">
+      <div class="logo-mark"><div class="logo-mark-dot"></div></div>
+      <span>Skallery</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How it Works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#for-who">Who it's for</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <div class="nav-pill">
+      <div class="nav-pill-dot"></div>
+      Coming Soon
+    </div>
+
+    <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle menu">
+      <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+      <svg id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" style="display:none">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#how-it-works" onclick="closeMenu()">How it Works</a>
+    <a href="#features" onclick="closeMenu()">Features</a>
+    <a href="#for-who" onclick="closeMenu()">Who it's for</a>
+    <a href="#faq" onclick="closeMenu()">FAQ</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-inner">
+    <!-- Text -->
+    <div>
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span>The new standard for talent</span>
+      </div>
+
+      <p class="hero-dict">
+        <span class="hero-dict-word">skallery</span>
+        <span class="hero-dict-pron">/ˈskaləri/</span>
+        <span class="hero-dict-sep">—</span>
+        <span class="hero-dict-def">a gallery for your skills.</span>
+      </p>
+
+      <h1>
+        Replace your resume<br/>
+        with <span class="gradient-text">verifiable proof.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Move beyond static documents and unverified claims. Skallery creates a dynamic, living profile where every skill is backed by concrete evidence that anyone can inspect.
+      </p>
+
+      <div class="coming-soon-tag">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        Platform launching soon — stay tuned
+      </div>
+    </div>
+
+    <!-- Card Mockup -->
+    <div class="card-wrap">
+      <div class="card-deco"></div>
+      <div class="profile-card">
+        <div class="card-banner">
+          <div class="card-verified-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+            </svg>
+            IDENTITY VERIFIED
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-avatar-row">
+            <div class="card-avatar">
+              S
+              <div class="card-avatar-check">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="card-name">Sarah Jenkins</div>
+          <div class="card-role">Senior Full Stack Engineer</div>
+
+          <div class="skill-row">
+            <div class="skill-row-top">
+              <span class="skill-name">React.js</span>
+              <span class="skill-verified">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+                VERIFIED
+              </span>
+            </div>
+            <div class="skill-bar"><div class="skill-bar-fill" style="width:98%"></div></div>
+          </div>
+
+          <div class="skill-row">
+            <div class="skill-row-top">
+              <span class="skill-name">AWS Architecture</span>
+              <span class="skill-verified">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg>
+                VERIFIED
+              </span>
+            </div>
+            <div class="skill-bar"><div class="skill-bar-fill" style="width:100%"></div></div>
+          </div>
+
+          <div class="card-footer">
+            <span>View verified evidence chain →</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="float-badge">
+        <div class="float-badge-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+        </div>
+        <div>
+          <div class="float-badge-label">Last Verified</div>
+          <div class="float-badge-value">Just now</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Problem ── -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-label">The Problem</div>
+    <div class="problem-grid">
+      <div>
+        <h2 class="section-title">Resumes are a broken<br/>trust mechanism.</h2>
+        <p class="section-sub" style="margin-top:1rem">
+          The traditional resume is a 100-year-old technology operating in a world that demands evidence. Hiring is plagued by information asymmetry — candidates can claim anything, and employers have no efficient way to verify.
+        </p>
+
+        <div style="margin-top:2.5rem">
+          <div class="problem-point">
+            <div class="problem-num">1</div>
+            <div>
+              <h4>Unverifiable claims</h4>
+              <p>75% of HR managers catch resume lies. Self-reported skill levels are meaningless without a reference point.</p>
+            </div>
+          </div>
+          <div class="problem-point">
+            <div class="problem-num">2</div>
+            <div>
+              <h4>Expensive screening</h4>
+              <p>Companies spend thousands per hire just filtering candidates — most of which could be automated with real signal.</p>
+            </div>
+          </div>
+          <div class="problem-point">
+            <div class="problem-num">3</div>
+            <div>
+              <h4>Great talent goes unnoticed</h4>
+              <p>Skilled professionals without prestigious brand names are passed over in favour of recognisable logos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="trust-box">
+          <h3>Resume vs. Skallery Profile</h3>
+
+          <div class="trust-row">
+            <span class="trust-label">Skill proficiency level</span>
+            <div style="display:flex;gap:0.5rem">
+              <span class="trust-tag tag-none">Self-reported</span>
+              <span class="trust-tag tag-verified">Evidence-backed</span>
+            </div>
+          </div>
+          <div class="trust-row">
+            <span class="trust-label">Work experience</span>
+            <div style="display:flex;gap:0.5rem">
+              <span class="trust-tag tag-pending">Unverified claims</span>
+              <span class="trust-tag tag-verified">Employer-verified</span>
+            </div>
+          </div>
+          <div class="trust-row">
+            <span class="trust-label">Certifications</span>
+            <div style="display:flex;gap:0.5rem">
+              <span class="trust-tag tag-pending">Listed only</span>
+              <span class="trust-tag tag-verified">Cryptographically linked</span>
+            </div>
+          </div>
+          <div class="trust-row">
+            <span class="trust-label">Project contributions</span>
+            <div style="display:flex;gap:0.5rem">
+              <span class="trust-tag tag-none">Described in prose</span>
+              <span class="trust-tag tag-verified">Analysed from source</span>
+            </div>
+          </div>
+          <div class="trust-row">
+            <span class="trust-label">Peer testimonials</span>
+            <div style="display:flex;gap:0.5rem">
+              <span class="trust-tag tag-none">References on request</span>
+              <span class="trust-tag tag-verified">Attached to evidence</span>
+            </div>
+          </div>
+          <div class="trust-row">
+            <span class="trust-label">Updates automatically</span>
+            <div style="display:flex;gap:0.5rem">
+              <span class="trust-tag tag-none">Never</span>
+              <span class="trust-tag tag-verified">Continuously</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How it Works ── -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label">How it Works</div>
+      <h2 class="section-title">From claim to proof in four steps.</h2>
+      <p class="section-sub" style="margin-top:0.75rem">
+        Skallery automatically gathers evidence from the places where you actually do your work, then surfaces it in a format that employers can trust.
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Connect your accounts</h4>
+        <p>Link GitHub, LinkedIn, Behance, certification providers, and more. You control exactly what gets shared.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>We analyse the evidence</h4>
+        <p>Our engine scans repositories, parses certifications, and cross-references employment records to extract real signal.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Skills get verified</h4>
+        <p>Each skill receives a confidence score tied to specific, linkable evidence — not a self-assessment slider.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Share your profile</h4>
+        <p>Send a single link. Employers see your full evidence chain. No more cover letters, no more take-home tests.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ── -->
+<section class="section section-alt" id="features">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Three kinds of proof,<br/>one unified profile.</h2>
+      <p class="section-sub" style="margin-top:0.75rem">
+        We aggregate and verify from multiple source types to build a complete, multi-dimensional picture of ability.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Card 1 -->
+      <div class="feature-card">
+        <div class="feature-icon icon-lime">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+          </svg>
+        </div>
+        <h4>Project-Based Proof</h4>
+        <p>Connect GitHub, Behance, or personal blogs. Skallery analyses code repositories for quality, languages, and contribution patterns — turning real work into validated skill points.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="feature-card">
+        <div class="feature-icon icon-emerald">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 3.741-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+          </svg>
+        </div>
+        <h4>Assessment-Based Proof</h4>
+        <p>Integrate with official certification bodies like AWS and Google Cloud, plus structured skills challenges. All achievements are displayed as verifiable, tamper-proof credentials.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="feature-card">
+        <div class="feature-icon icon-amber">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" />
+          </svg>
+        </div>
+        <h4>Experience-Based Proof</h4>
+        <p>Enable managers and clients to provide context-rich testimonials tied to specific project outcomes, creating a verified and permanent record of on-the-job performance.</p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="feature-card">
+        <div class="feature-icon icon-lime">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+          </svg>
+        </div>
+        <h4>You Control Your Data</h4>
+        <p>Granular privacy settings let you decide exactly what each viewer can see. Built on Verifiable Credentials standards — you hold the keys to your own validated achievements.</p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="feature-card">
+        <div class="feature-icon icon-emerald">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+        </div>
+        <h4>Always Up to Date</h4>
+        <p>Your profile evolves automatically as you publish new code, earn new certificates, and receive new endorsements. No manual updates required.</p>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="feature-card">
+        <div class="feature-icon icon-amber">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605" />
+          </svg>
+        </div>
+        <h4>Employer Dashboard</h4>
+        <p>Recruiters and hiring managers get a structured view of verified candidates with filterable skill evidence — dramatically reducing screening time and false positives.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Who it's for ── -->
+<section class="section" id="for-who">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label">Who it's for</div>
+      <h2 class="section-title">Built for both sides of the hiring table.</h2>
+    </div>
+
+    <div class="audience-grid">
+      <!-- Professionals -->
+      <div class="audience-card audience-pro">
+        <h3>For Professionals</h3>
+        <p class="sub">Developers, designers, data scientists, and any knowledge worker who wants their skills to speak for themselves.</p>
+        <ul class="audience-list">
+          <li>
+            <span class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg></span>
+            Stand out with evidence, not claims — let real work do the talking
+          </li>
+          <li>
+            <span class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg></span>
+            Connect GitHub, LinkedIn, Behance, AWS, Google Cloud, and more
+          </li>
+          <li>
+            <span class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg></span>
+            A single shareable link replaces your resume, cover letter, and portfolio
+          </li>
+          <li>
+            <span class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg></span>
+            Free for individuals — your profile, your data
+          </li>
+        </ul>
+      </div>
+
+      <!-- Employers -->
+      <div class="audience-card audience-emp">
+        <h3>For Employers &amp; Recruiters</h3>
+        <p class="sub">Hiring teams that want to reduce screening noise and find genuinely qualified candidates faster.</p>
+        <ul class="audience-list">
+          <li>
+            <span class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg></span>
+            Filter candidates by verified skills, not keyword-stuffed resumes
+          </li>
+          <li>
+            <span class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg></span>
+            Inspect the full evidence chain for any claimed skill before interviewing
+          </li>
+          <li>
+            <span class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg></span>
+            Eliminate wasted interviews with candidates who overstated experience
+          </li>
+          <li>
+            <span class="check-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd"/></svg></span>
+            Subscription plans with access to the full talent marketplace
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials ── -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="text-center">
+      <h2 class="section-title">Why we're building this.</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <div class="testimonial-bar"></div>
+        <div class="stars">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+        </div>
+        <blockquote>"The resume is a 100-year-old technology in a 21st-century world. It's a list of claims, not a demonstration of ability. We built Skallery to close this trust gap once and for all."</blockquote>
+        <div class="testimonial-author">
+          <div class="avatar-circle" style="background:#6366f1">J</div>
+          <div>
+            <div class="author-name">Jane Doe</div>
+            <div class="author-role">CEO &amp; Founder, Skallery</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="testimonial-bar"></div>
+        <div class="stars">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></svg>
+        </div>
+        <blockquote>"With Skallery, I'm no longer just a list of bullet points. Recruiters can see my actual code contributions, my problem-solving process, and a client testimonial from a major project."</blockquote>
+        <div class="testimonial-author">
+          <div class="avatar-circle" style="background:#10b981">J</div>
+          <div>
+            <div class="author-name">John Smith</div>
+            <div class="author-role">Software Developer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="section" id="faq">
+  <div class="container-narrow">
+    <div class="text-center">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-sub" style="margin-top:0.75rem">Everything you need to know about the verification platform.</p>
+    </div>
+
+    <div class="faq-list" style="margin-top:3rem; background:#fff; border:1px solid var(--gray-100); border-radius:1.25rem; padding:0.5rem 2rem; box-shadow:0 2px 12px rgba(0,0,0,0.04)">
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>How is Skallery different from LinkedIn?</span>
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>LinkedIn is primarily a professional social network based on self-reported claims and simple endorsements. Skallery is a verification engine. Every skill on a Skallery profile is linked to a piece of evidence — a project, a certificate, or a context-rich testimonial — that a third party can inspect. We focus on verifiable proof, not just connections.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>What kinds of skills can I prove on Skallery?</span>
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>Our system is designed to be highly granular. Instead of just listing "Marketing," you can prove "A/B Testing in Google Optimize" by linking to a case study with verified results. We focus on technical skills (software development, data science, design) as well as proven soft skills like Team Leadership through verified examples.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>Who controls my data?</span>
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>You do. This is a core principle. Your Skallery profile is yours. You have granular control over who can see your profile and which pieces of evidence are visible. We use technologies like Verifiable Credentials to ensure that you hold the keys to your own validated achievements.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>How do you prevent cheating on skill assessments?</span>
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>We take assessment integrity very seriously. Our system employs a multi-layered approach including plagiarism detection on submitted code, identity verification checks, and options for proctoring on high-stakes assessments. For peer-validated challenges, a consensus model ensures multiple experts review a submission.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>What does Skallery cost?</span>
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>It is free for individuals to create a profile, connect their accounts, and showcase their verified skills. We will offer premium features for individuals in the future. For employers and recruiters, we offer subscription-based plans to access the talent marketplace.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>When will Skallery launch?</span>
+          <div class="faq-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </div>
+        </button>
+        <div class="faq-answer">
+          <p>We are currently in active development. Follow us on social media or check back on this page for launch announcements. We're building something that will fundamentally change how professional ability is communicated and verified.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-mark"></div>
+        <span>Skallery</span>
+      </div>
+      <p>The verification engine for the modern workforce. Replace static claims with cryptographic proof of ability.</p>
+    </div>
+
+    <div>
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="#">Individuals</a></li>
+        <li><a href="#">Employers</a></li>
+        <li><a href="#">Pricing</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Security</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    &copy; 2026 Skallery Inc. All rights reserved.
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const open = document.getElementById('menu-icon-open');
+    const close = document.getElementById('menu-icon-close');
+    const isOpen = menu.classList.toggle('open');
+    open.style.display = isOpen ? 'none' : 'block';
+    close.style.display = isOpen ? 'block' : 'none';
+  }
+  function closeMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+    document.getElementById('menu-icon-open').style.display = 'block';
+    document.getElementById('menu-icon-close').style.display = 'none';
+  }
+
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const answer = btn.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.faq-answer.open').forEach(el => el.classList.remove('open'));
+    document.querySelectorAll('.faq-question.open').forEach(el => el.classList.remove('open'));
+
+    if (!isOpen) {
+      answer.classList.add('open');
+      btn.classList.add('open');
+    }
+  }
+</script>
+
 </body>
 </html>
